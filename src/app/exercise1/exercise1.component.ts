@@ -13,7 +13,7 @@ export class Exercise1Component implements OnInit {
   constructor(private countriesService: CountriesService) {}
 
   countries$: Observable<Country[]>;
-  countryControl = new FormControl({ id: '', description: '' });
+  countryControl = new FormControl<Country>({ id: '', description: '' });
 
   ngOnInit() {
     this.countries$ = this.countriesService.getCountries();
