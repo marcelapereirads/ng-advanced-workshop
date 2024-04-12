@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { Country, State } from './types';
 
 @Injectable({
@@ -18,6 +18,12 @@ export class CountryService {
   }
 
   getStates(countryCode: string): Observable<State[]> {
-    return this.http.get<State[]>(`http://localhost:3000/states?countryCode=${countryCode}`);
+    return this.http
+      .get<State[]>(`http://localhost:3000/states?countryCode=${countryCode}`)
+      .pipe(tap((states: State[]) => this.sortStates(states)));
+  }
+
+  sortStates(states: State[]): State[] {
+    return states.sort((current, next) => current.description.localeCompare(next.description));
   }
 }

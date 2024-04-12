@@ -31,7 +31,7 @@
   </select>
   <div>Current value: {{ countryDropdown.value }}</div>
 </div>
-<div *ngIf="states$ | async as states">
+<ng-container *ngIf="states$ | async as states">
   <div *ngIf="states.length">
     <div>Select one of {{ states.length }} states/provinces:</div>
     <select [formControl]="stateDropdown">
@@ -39,4 +39,4 @@
     </select>
     <div>Current value: {{ stateDropdown.value }}</div>
   </div>
-</div>
+</ng-container>
