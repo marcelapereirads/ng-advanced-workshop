@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {Country} from './types';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Country, State } from './types';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CountryService {
-
   private countries$: Observable<Country[]>;
 
   constructor(private http: HttpClient) {
@@ -16,5 +15,9 @@ export class CountryService {
 
   getCountries(): Observable<Country[]> {
     return this.countries$;
+  }
+
+  getStates(countryCode: string): Observable<State[]> {
+    return this.http.get<State[]>(`http://localhost:3000/states?countryCode=${countryCode}`);
   }
 }
