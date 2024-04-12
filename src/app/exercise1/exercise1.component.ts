@@ -1,8 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CountriesService } from './services/countries.service';
-import { Country } from './exercise1.model';
-import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-exercise1',
@@ -10,12 +6,10 @@ import { Observable } from 'rxjs';
   styleUrls: ['./exercise1.component.css']
 })
 export class Exercise1Component implements OnInit {
-  constructor(private countriesService: CountriesService) {}
 
-  countries$: Observable<Country[]>;
-  countryControl = new FormControl({ id: '', description: '' });
+  constructor() { }
 
   ngOnInit() {
-    this.countries$ = this.countriesService.getCountries();
   }
+
 }
