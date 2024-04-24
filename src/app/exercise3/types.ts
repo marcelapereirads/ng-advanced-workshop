@@ -1,6 +1,7 @@
 export interface Country {
   description: string;
   id: string;
+  highlightedDescription: string;
 }
 
 export interface State {
