@@ -27,8 +27,8 @@
     <div class="dropdown-content">
       <span
         *ngFor="let country of countries"
-        (click)="onSelectCountry(country)"
-        [innerHtml]="country.highlightedDescription"
+        [innerHtml]="country.description | highlightTextSnippet: countryControl.value"
+        (click)="updateStates(country)"
       >
       </span>
     </div>

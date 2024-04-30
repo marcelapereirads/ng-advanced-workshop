@@ -18,27 +18,14 @@ export class Exercise3Component {
   countries$: Observable<Country[]> = this.service.getCountries().pipe(
     combineLatestWith(this.countryControl.valueChanges.pipe(startWith(''))),
     map(([countries, formValue]) =>
-      countries
-        .filter((country) => country.description.toLowerCase().includes(formValue.toLowerCase()))
-        .map((country) => {
-          const searchStringPosition = country.description.toLowerCase().indexOf(formValue.toLowerCase());
-          const prefix = country.description.substring(0, searchStringPosition);
-          const match = country.description.substring(searchStringPosition, searchStringPosition + formValue.length);
-          const suffix = country.description.substring(searchStringPosition + formValue.length);
-
-          return {
-            ...country,
-            highlightedDescription: `${prefix}<b>${match}</b>${suffix}`
-          };
-        })
+      countries.filter((country) => country.description.toLowerCase().includes(formValue.toLowerCase()))
     )
   );
 
   constructor(private service: CountryService) {}
 
-  onSelectCountry(country: Country) {
+  updateStates(country: Country) {
     this.countryControl.setValue(country.description);
-    this.country = country;
     this.states$ = this.service.getStatesFor(country.id);
   }
 }
