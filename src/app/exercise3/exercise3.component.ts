@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { Observable, combineLatest, combineLatestWith, filter, map, merge, startWith, tap } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { Observable, map, withLatestFrom } from 'rxjs';
 import { Country, State } from './types';
 import { CountryService } from './country.service';
 import { FormControl } from '@angular/forms';
@@ -9,20 +9,22 @@ import { FormControl } from '@angular/forms';
   templateUrl: './exercise3.component.html',
   styleUrls: ['./exercise3.component.css']
 })
-export class Exercise3Component {
+export class Exercise3Component implements OnInit {
+  countries$: Observable<Country[]>;
   states$: Observable<State[]>;
-  country!: Country;
-  state!: State;
-  countryControl = new FormControl('');
-
-  countries$: Observable<Country[]> = this.service.getCountries().pipe(
-    combineLatestWith(this.countryControl.valueChanges.pipe(startWith(''))),
-    map(([countries, formValue]) =>
-      countries.filter((country) => country.description.toLowerCase().includes(formValue.toLowerCase()))
-    )
-  );
+  state: State;
+  countryControl = new FormControl<string>('');
 
   constructor(private service: CountryService) {}
+
+  ngOnInit() {
+    this.countries$ = this.countryControl.valueChanges.pipe(
+      withLatestFrom(this.service.getCountries()),
+      map(([formValue, countries]) =>
+        countries.filter((country) => country.description.toLowerCase().includes(formValue.toLowerCase()))
+      )
+    );
+  }
 
   updateStates(country: Country) {
     this.countryControl.setValue(country.description);

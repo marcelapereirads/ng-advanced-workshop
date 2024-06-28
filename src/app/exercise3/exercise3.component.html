@@ -15,16 +15,10 @@
 </h4>
 <hr />
 <h2>Result</h2>
-<div *ngIf="countries$ | async as countries">
+<div>
   <div class="dropdown">
-    <input
-      type="text"
-      class="dropbtn"
-      placeholder="Enter country name"
-      [value]="country?.description"
-      [formControl]="countryControl"
-    />
-    <div class="dropdown-content">
+    <input type="text" class="dropbtn" placeholder="Enter country name" [formControl]="countryControl" />
+    <div class="dropdown-content" *ngIf="countries$ | async as countries">
       <span
         *ngFor="let country of countries"
         [innerHtml]="country.description | highlightTextSnippet: countryControl.value"
@@ -40,7 +34,7 @@
       type="text"
       class="dropbtn"
       [value]="state?.description"
-      [disabled]="states.length == 0"
+      [disabled]="states.length === 0"
       placeholder="Enter your state"
     />
     <div class="dropdown-content">
