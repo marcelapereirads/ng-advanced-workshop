@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { Country, State } from './types';
 import { FormControl } from '@angular/forms';
 import { CountryService } from './country.service';
-import { combineLatestWith, map, switchMap, withLatestFrom } from 'rxjs/operators';
+import { combineLatestWith, distinctUntilChanged, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 
 @Component({
   selector: 'app-exercise4',
@@ -13,12 +13,12 @@ import { combineLatestWith, map, switchMap, withLatestFrom } from 'rxjs/operator
 export class Exercise4Component {
   countries$: Observable<Country[]>;
   states$: Observable<State[]>;
-  state!: State;
   countryControl = new FormControl<string>('');
   stateControl = new FormControl<string>('');
 
   constructor(private service: CountryService) {
     this.countries$ = this.countryControl.valueChanges.pipe(
+      //WithLatestFrom is used to get the countries from the service without continue listening to changes on it
       withLatestFrom(this.service.getCountries()),
       map(([userInput, countries]) =>
         countries.filter((c) => c.description.toLowerCase().indexOf((userInput ?? '').toLowerCase()) !== -1)
@@ -26,7 +26,9 @@ export class Exercise4Component {
     );
 
     this.states$ = this.stateControl.valueChanges.pipe(
+      // combineLatestWith is used to listen to both, stateControl value changes and countries observable receiving a new value
       combineLatestWith(this.countries$),
+      // switchMap to get the states every time the country or the control value for state changes
       switchMap((country) => {
         return this.service.getStatesFor(country[1][0].id);
       }),
@@ -38,9 +40,10 @@ export class Exercise4Component {
 
   updateStates(country: Country) {
     this.countryControl.setValue(country.description);
+    this.stateControl.setValue('');
   }
 
   selectState(state: State) {
-    this.stateControl.setValue(state.description);
+    this.stateControl.setValue(state.description ?? '');
   }
 }
